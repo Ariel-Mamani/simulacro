@@ -50,26 +50,45 @@ class Empresa{
     {
         return "Denominacion: ".$this->getDenominacion()."\n".
                "Direccion: ".$this->getDireccion()."\n".
-               "Coleccion Clientes: ".$this->getClientes()."\n".
-               "Coleccion Motos: ".$this->getMotos()."\n".
-               "Coleccion Ventas: ".$this->getVentas();
+               "Coleccion Clientes: "."\n".$this-> listadoClientes()."\n".
+               "Coleccion Motos: "."\n".$this->listadoMotos()."\n".
+               "Coleccion Ventas: "."\n".$this->listadoVentas();
     }
-    // VERIFICA QUE ESTE LA MOTO   ++++++++++++++++++USAR EN EL TEST
-    public function verificaMoto($codigoMoto){
-        $colMotos=$this->getMotos();
-        $verifica=false;
-        $i=0;
-        while($i<count($colMotos) && $verifica==false){
-            if($colMotos[$i]->getCodigo()==$codigoMoto){
-                $verifica=true;
-            }
+    //MUESTRA los datos de los clientes
+    public function listadoClientes(){
+        $colClientes=$this->getClientes();
+        $num=count($colClientes);
+        for($i=0;$i<$num;$i++){
+            $cliente=$colClientes[$i];
+            $lista=$cliente." ";
         }
-        return $verifica;
+        return $lista;
+    }
+    //MUESTRA los datos de las motos
+    public function listadoMotos(){
+        $colMotos=$this->getMotos();
+        $num=count($colMotos);
+        for($i=0;$i<$num;$i++){
+            $moto=$colMotos[$i];
+            $lista=$moto." ";
+        }
+        return $lista;
+    }
+    //MUESTRA los datos de las ventas
+    public function listadoVentas(){
+        $lista=" ";
+        $colVentas=$this->getVentas();
+        $num=count($colVentas);
+        for($i=0;$i<$num;$i++){
+            $venta=$colVentas[$i];
+            $lista=$venta." ";
+        }
+        return $lista;
     }
     // ESTO SOLO LA BUSCA LA MOTO Y LA GUARDA PARA RETORNARLAAA
     public function retornarMoto($codigoMoto){
         $colMotos=$this->getMotos();
-        $laMoto=-1;
+        $laMoto=null;
         $i=0;
         while($i<count($colMotos)){
             if($colMotos[$i]->getCodigo()==$codigoMoto){
@@ -80,48 +99,40 @@ class Empresa{
         }
         return $laMoto;
     }
-    // RETORNA UNA COLECCION DE CODIGOS
-    public function creaColeccionCodigos(){
-        $colMotos=$this->getMotos();
-        for($i=0;$i<count($colMotos);$i++){
-            $colCodigos[$i]=$colMotos[$i]->$this->getCodigo();
-        }
-        return $colCodigos;
-    }
+    
     public function registrarVenta($colCodigos,$objCliente){
         $precioFinal=0;
-        if( $objCliente->getEstado()!=false){
+        $arrayMotos=[];
+        $numVenta=count($this->getVentas());
+        $fecha=date("Y");
+        $objVenta= new Venta($numVenta+1,$fecha,$objCliente,$arrayMotos,0);
+        if($objCliente->getEstado()!=true){
             for($i=0;$i<count($colCodigos);$i++){
-                $unCodigo=$colCodigos[$i];
-                $verifica=$this->verificaMoto($unCodigo);
-                $laMoto=$this->retornarMoto($unCodigo);
-                if($verifica==true && $laMoto->getActiva()==true ){
-                    $colMotos=$this->getVentas()->incorporarMoto($laMoto);
-                    $precioFinal=$colMotos->$this->getVentas()->getPrecio();
+                $objMoto=$this->retornarMoto($colCodigos[$i]);
+                if($objMoto!=null){
+                    $objVenta->incorporarMoto($objMoto);
+                    
                 }
             }
+            $precioFinal=$objVenta->getPrecio();
         }
+        $colVentas=$this->getVentas();
+        array_push($colVentas,$objVenta);
+        $this->setVentas($colVentas);
         return $precioFinal;
     }
-    // VERIFICA QUE SE RELIZARON VENTAS AL CLIENTE, RETORNA TRUE O FALSE
    
     // RETORNA LA COLECCION DE VENTAS AL CLIENTE
     public function retornarVentaXCliente($tipo,$numDoc){
+        $ventasACliente=null;
         $colVentas=$this->getVentas();
         $i=0;
-        $verifica=false;
         foreach($colVentas as $venta){
-            if($venta->getCliente()->getDni()==$numDoc){
-                if($venta->getCliente()->getTipo()==$tipo){
+            if($venta->getCliente()->getDni()==$numDoc && $venta->getCliente()->getTipoDoc()==$tipo){
                     $ventasACliente[$i]=$venta;
-                    $verifica=true;
-                }
+               
             }
-        }
-        if($verifica==false){
-            $ventasACliente[0]=-1;
         }
         return $ventasACliente;
     }
-
 }

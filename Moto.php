@@ -55,20 +55,21 @@ class Moto{
     }
     public function __toString()
     {
-        return "Codigo: ".$this->getCodigo()."\n".
-               "Costo: ".$this->getCosto()."\n".
-               "Año de fabricacion: ".$this->getAnio()."\n".
-               "Descripcion: ".$this->getDescripcion()."\n".
-               "Porcentaje de incremento anual: ".$this->getPorcentaje()."\n".
-               "Activa: ".$this->getActiva();
+        return " -Codigo: ".$this->getCodigo()."\n".
+               " -Costo: ".$this->getCosto()."\n".
+               " -Año de fabricacion: ".$this->getAnio()."\n".
+               " -Descripcion: ".$this->getDescripcion()."\n".
+               " -Porcentaje de incremento anual: ".$this->getPorcentaje()."\n".
+               " -Activa: ".$this->getActiva();
     }
+    // Calcula el precio 
 public function darPrecioVenta(){
     $venta=-1;
     $disponible=$this->getActiva();
     $anio=2024-$this->getAnio();
     $porcentaje=$this->getPorcentaje();
-    if($disponible==true){
-        $venta=$this->getCosto()+$this->getCosto()*($anio*$porcentaje);
+    if($disponible){
+        $venta=$this->getCosto() + $this->getCosto()*($anio * $porcentaje);
     }
     return $venta;
 }

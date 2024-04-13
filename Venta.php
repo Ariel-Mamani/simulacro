@@ -54,16 +54,18 @@ class Venta{
                "Motos: ".$this->getMotos()."\n".
                "Precio final: ".$this->getPrecio();
     }
+    
+    //INCORPORA una moto a la coleccion de motos, si es posible, y setea el precio final
     public function incorporarMoto($objMoto){
-        $coleccionMotos[0]=-1;
+        $respuesta=false;
         if($objMoto->getActiva()==true){
+            $respuesta=true;
             $coleccionMotos=$this->getMotos();
             array_push($coleccionMotos,$objMoto);
             $this->setMotos($coleccionMotos);
             $objMoto->darPrecioVenta();
-            $this->setPrecio($objMoto->darPrecioVenta());
+            $this->setPrecio($this->getPrecio() + $objMoto->darPrecioVenta());
         }
-        return $coleccionMotos;
+        return $respuesta;
     }
-
 }

@@ -47,11 +47,10 @@ class Cliente{
     }
     public function __toString()
     {
-        return "Nombre".$this->getNombre()."\n".
-               "Apellido".$this->getApellido()."\n".
-               "Estado".$this->getEstado()."\n".
-               "Tipo documento".$this->getTipoDoc()."\n".
-               "DNI".$this->getDni();
+        return " *Nombre: ".$this->getNombre()."\n".
+               " *Apellido: ".$this->getApellido()."\n".
+               " *Estado: ".$this->getEstado()."\n".
+               " *Tipo documento: ".$this->getTipoDoc()."\n".
+               " *DNI: ".$this->getDni();
     }
-
 }
