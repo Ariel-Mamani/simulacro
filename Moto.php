@@ -62,15 +62,16 @@ class Moto{
                " -Porcentaje de incremento anual: ".$this->getPorcentaje()."\n".
                " -Activa: ".$this->getActiva();
     }
-    // Calcula el precio 
+    // Calcula el precio de venta de una moto
 public function darPrecioVenta(){
-    $venta=-1;
     $disponible=$this->getActiva();
+    if($disponible==true){
     $anio=2024-$this->getAnio();
-    $porcentaje=$this->getPorcentaje();
-    if($disponible){
-        $venta=$this->getCosto() + $this->getCosto()*($anio * $porcentaje);
+    $porcentaje=$this->getPorcentaje()/100;
+        $precioVenta=$this->getCosto() + ($this->getCosto()*($anio * $porcentaje));
+    }else{
+        $precioVenta=-1;
     }
-    return $venta;
+    return $precioVenta;
 }
 }

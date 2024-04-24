@@ -39,10 +39,10 @@ class Venta{
     public function setMotos($colMotos){
         $this->colMotos=$colMotos;
     }
-    public function getPrecio(){
+    public function getPrecioFinal(){
         return $this->precioFinal;
     }
-    public function setPrecio($precio){
+    public function setPrecioFinal($precio){
         $this->precioFinal=$precio;
     }
 
@@ -51,10 +51,19 @@ class Venta{
         return "Numero: ".$this->getNumero()."\n".
                "Fecha: ".$this->getFecha()."\n".
                "Cliente: ".$this->getCliente()."\n".
-               "Motos: ".$this->getMotos()."\n".
-               "Precio final: ".$this->getPrecio();
+               "Motos: ".$this->muestraMotos()."\n".
+               "Precio final: ".$this->getPrecioFinal();
     }
-    
+    //MUESTRA coleccion de motos
+    public function muestraMotos(){
+        $colMotos=$this->getMotos();
+        $cadena=" ";
+        $i=0;
+        foreach($colMotos as $moto){
+            $cadena= $cadena."Moto nº ".$i.$moto."\n";
+        }
+        return $cadena;
+    }
     //INCORPORA una moto a la coleccion de motos, si es posible, y setea el precio final
     public function incorporarMoto($objMoto){
         $respuesta=false;
@@ -63,8 +72,9 @@ class Venta{
             $coleccionMotos=$this->getMotos();
             array_push($coleccionMotos,$objMoto);
             $this->setMotos($coleccionMotos);
-            $objMoto->darPrecioVenta();
-            $this->setPrecio($this->getPrecio() + $objMoto->darPrecioVenta());
+            $precioMoto=$objMoto->darPrecioVenta();
+            $precioFinal=$this->getPrecioFinal();
+            $this->setPrecioFinal($precioFinal + $precioMoto);
         }
         return $respuesta;
     }

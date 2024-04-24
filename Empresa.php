@@ -45,92 +45,73 @@ class Empresa{
     public function setVentas($colVentas){
         $this->colVentas=$colVentas;
     }
+    public function retornarCadena($coleccion){
+        $cadena=" ";
+        foreach($coleccion as $elemento){
+            $cadena=$cadena." ".$elemento."\n";
+        }
+        return $cadena;
+    }
 
     public function __toString()
     {
         return "Denominacion: ".$this->getDenominacion()."\n".
                "Direccion: ".$this->getDireccion()."\n".
-               "Coleccion Clientes: "."\n".$this-> listadoClientes()."\n".
-               "Coleccion Motos: "."\n".$this->listadoMotos()."\n".
-               "Coleccion Ventas: "."\n".$this->listadoVentas();
+               "Coleccion Clientes: "."\n".$this->retornarCadena($this-> getClientes())."\n".
+               "Coleccion Motos: "."\n".$this->retornarCadena($this->getMotos())."\n".
+               "Coleccion Ventas: "."\n".$this->retornarCadena($this->getVentas());
     }
-    //MUESTRA los datos de los clientes
-    public function listadoClientes(){
-        $colClientes=$this->getClientes();
-        $num=count($colClientes);
-        for($i=0;$i<$num;$i++){
-            $cliente=$colClientes[$i];
-            $lista=$cliente." ";
-        }
-        return $lista;
-    }
-    //MUESTRA los datos de las motos
-    public function listadoMotos(){
-        $colMotos=$this->getMotos();
-        $num=count($colMotos);
-        for($i=0;$i<$num;$i++){
-            $moto=$colMotos[$i];
-            $lista=$moto." ";
-        }
-        return $lista;
-    }
-    //MUESTRA los datos de las ventas
-    public function listadoVentas(){
-        $lista=" ";
-        $colVentas=$this->getVentas();
-        $num=count($colVentas);
-        for($i=0;$i<$num;$i++){
-            $venta=$colVentas[$i];
-            $lista=$venta." ";
-        }
-        return $lista;
-    }
+
     // ESTO SOLO LA BUSCA LA MOTO Y LA GUARDA PARA RETORNARLAAA
     public function retornarMoto($codigoMoto){
         $colMotos=$this->getMotos();
         $laMoto=null;
+        $motoEncontrada=false;
         $i=0;
-        while($i<count($colMotos)){
+        while($i<count($colMotos)  && !$motoEncontrada){
             if($colMotos[$i]->getCodigo()==$codigoMoto){
                 $laMoto=$colMotos[$i];
-                $i=count($colMotos);
+                $motoEncontrada=true;
             }
             $i++;
         }
         return $laMoto;
     }
-    
+    //REGISTRA VENTAS DE MOTO
     public function registrarVenta($colCodigos,$objCliente){
         $precioFinal=0;
         $arrayMotos=[];
         $numVenta=count($this->getVentas());
+        $colVentas=$this->getVentas();
         $fecha=date("Y");
-        $objVenta= new Venta($numVenta+1,$fecha,$objCliente,$arrayMotos,0);
+        $nuevaVenta= new Venta($numVenta+1,$fecha,$objCliente,$arrayMotos,0);
         if($objCliente->getEstado()!=true){
             for($i=0;$i<count($colCodigos);$i++){
                 $objMoto=$this->retornarMoto($colCodigos[$i]);
-                if($objMoto!=null){
-                    $objVenta->incorporarMoto($objMoto);
+                if($objMoto!=null){ //TRADUCCION: si se encontro alguna moto con el codigo
+                    $nuevaVenta->incorporarMoto($objMoto);
                     
                 }
             }
-            $precioFinal=$objVenta->getPrecio();
+            if($nuevaVenta->getMotos()>0){ //TRADUCCION:si la coleccion de motos del $objVenta vendi motos
+                array_push($colVentas,$nuevaVenta);
+                $this->setVentas($colVentas);
+                $precioFinal=$nuevaVenta->getPrecioFinal();
+            }
+        }else{
+            $precioFinal=-1;
         }
-        $colVentas=$this->getVentas();
-        array_push($colVentas,$objVenta);
-        $this->setVentas($colVentas);
+           
         return $precioFinal;
     }
    
     // RETORNA LA COLECCION DE VENTAS AL CLIENTE
     public function retornarVentaXCliente($tipo,$numDoc){
-        $ventasACliente=null;
+        $ventasACliente=[];
         $colVentas=$this->getVentas();
-        $i=0;
         foreach($colVentas as $venta){
             if($venta->getCliente()->getDni()==$numDoc && $venta->getCliente()->getTipoDoc()==$tipo){
-                    $ventasACliente[$i]=$venta;
-               
+                    array_push($ventasACliente,$venta);
             }
         }
         return $ventasACliente;

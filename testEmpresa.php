@@ -13,33 +13,47 @@ $objMoto2= new Moto("12",594000,2021,"Zanella Zr 150 Ohc",70,true);
 $objMoto3= new Moto("13",999900,2023,"Zanella Patagonian Eagle 250",55,false);
 $colMotos=[$objMoto1,$objMoto2,$objMoto3];
 
-// ----------------------PUNTO 5
-/*$colVentas=[];
-$objEmpresa= new Empresa("alta gama","Av Argenetina 123",$colClientes,$colMotos,$colVentas);
-$colCodigos=["11","12","13"];
-echo $objEmpresa->registrarVenta($colCodigos,$objCliente2);*/
+function mostrarDatosDeColeccion($coleccion){
+    echo "++++++++ Ventas +++++++++++"."\n";
+    foreach($coleccion as $elemento){
+        echo $elemento."\n";
+    }
+}
 
-// ----------------------PUNTO 6
-/*$colVentas=[];
-echo $objEmpresa= new Empresa("alta gama","Av Argenetina 123",$colClientes,$colMotos,$colVentas);
-echo $objEmpresa."\n";
-$colCodigos=["0"];
-echo "$".$objEmpresa->registrarVenta($colCodigos,$objCliente2);*/
-
-// ----------------------PUNTO 7
-/*$colVentas=[];
-$objEmpresa= new Empresa("alta gama","Av Argenetina 123",$colClientes,$colMotos,$colVentas);
-echo $objEmpresa."\n";
-$colCodigos=["2"];
-echo $objEmpresa->registrarVenta($colCodigos,$objCliente2);*/
-// ----------------------PUNTO 8
-/*$colVentas=[];
-$objEmpresa= new Empresa("alta gama","Av Argenetina 123",$colClientes,$colMotos,$colVentas);
-echo $objEmpresa."\n";
-echo $objEmpresa->retornarVentaXCliente("dni","111111");*/
-
-// ----------------------PUNTO 9
+echo " ----------------------PUNTO 1-------------------------"."\n";
 $colVentas=[];
 $objEmpresa= new Empresa("alta gama","Av Argenetina 123",$colClientes,$colMotos,$colVentas);
 echo $objEmpresa."\n";
-echo $objEmpresa->retornarVentaXCliente("dni","222222");
+
+echo " ----------------------PUNTO 5-------------------------"."\n";
+//Si la venta se realiza va a mostrar el importe total, pero puede pasar que la venta 
+//no se realize porque el cliente esta dado de baja o no se encuentren los codigos 
+//de las motos.
+$colCodigos=["11","12","13"];
+$objEmpresa->registrarVenta($colCodigos,$objCliente2);
+echo $objEmpresa."\n";
+
+echo " ----------------------PUNTO 6-------------------------"."\n";
+//Si la venta se realiza va a mostrar el importe total, pero puede pasar que la venta 
+//no se realize porque el cliente esta dado de baja o no se encuentren los codigos 
+//de las motos.
+
+$objEmpresa->registrarVenta(["0"],$objCliente2);
+echo $objEmpresa."\n";
+
+echo " ----------------------PUNTO 7-------------------------"."\n";
+//Si la venta se realiza va a mostrar el importe total, pero puede pasar que la venta 
+//no se realize porque el cliente esta dado de baja o no se encuentren los codigos 
+//de las motos.
+echo $objEmpresa->registrarVenta(["2"],$objCliente2)."\n";
+
+echo " ----------------------PUNTO 8-------------------------"."\n";
+//La funcion mostrarDatosDeColeccion, se va a encargar de  mostrar el arreglo/coleccion 
+//que metamos por parametros
+$lasVentas=$objEmpresa->retornarVentaXCliente("dni","111111");
+mostrarDatosDeColeccion($lasVentas);
+
+echo " ----------------------PUNTO 9-------------------------"."\n";
+//La funcion mostrarDatosDeColeccion, se va a encargar de  mostrar el arreglo/coleccion 
+//que metamos por parametros
+mostrarDatosDeColeccion($objEmpresa->retornarVentaXCliente("dni","222222"));
